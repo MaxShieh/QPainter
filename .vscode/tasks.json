@@ -1,0 +1,116 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "qmake build makefile (debug)",
+            "command": "qmake",
+            "args": [
+                "-o",
+                "./build/Makefile",
+                "CONFIG += debug",
+                "CONFIG += qml_debug",
+                "CONFIG += console",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "生成 Makefile (debug)"
+        },
+        {
+            "type": "shell",
+            "label": "qmake build makefile (release)",
+            "command": "qmake",
+            "args": [
+                "-o",
+                "./build/Makefile",
+                "CONFIG+=qtquickcompiler"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "生成 Makefile (release)"
+        },
+        {
+            "type": "shell",
+            "label": "Qt build debug",
+            "command": "mingw32-make.exe",
+            "args": [
+                "debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Qt 生成可调试文件",
+            "dependsOn": [
+                "qmake build makefile (debug)"
+            ]
+        },
+        {
+            "type": "shell",
+            "label": "Qt build release",
+            "command": "mingw32-make.exe",
+            "args": [
+                "release"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Qt 生成可执行文件",
+            "dependsOn": [
+                "qmake build makefile (release)"
+            ]
+        },
+        {
+            "type": "shell",
+            "label": "Qt build and run release",
+            "command": "${workspaceFolder}/build/release/${workspaceRootFolderName}.exe",
+            "args": [],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Qt 生成并运行可执行文件",
+            "dependsOn": [
+                "Qt build release"
+            ],
+            // close 键在 VS Code 1.57 引入
+            "presentation": {
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Qt build and run debug",
+            "command": "${workspaceFolder}/build/debug/${workspaceRootFolderName}.exe",
+            "args": [],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Qt 生成并运行可调试文件",
+            "dependsOn": [
+                "Qt build debug"
+            ]
+        },
+        {
+            "type": "shell",
+            "label": "Qt clean (release)",
+            "command": "mingw32-make.exe",
+            "args": [
+                "clean",
+                "distclean"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Qt 清除release文件",
+        },
+    ],
+    "version": "2.0.0"
+}
