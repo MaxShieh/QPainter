@@ -46,8 +46,93 @@ struct WallParameterOut_st
     uint uiBrokenNum_Layer2;	//第二层非整砖数量
     uint uiBrokenLen1OfLayer2;	//第二层第一块非整砖长度
     uint uiBrokenLen2OfLayer2;	//第二层第二块非整砖长度
+    uint uiTotalBrickNum;
     Brick *bricks;  //所有砖的数据
 };
+
+
+
+    //整砖层数计算(需要保证顶部灰缝)
+    inline static uint calFullBrickLayer(const WallParameterIn_st& in)
+    {
+        uint layer = (in.uiWallHeight - in.uiTopJointThickness) / (in.uiBrickHeight + in.uiJointThickness);
+        return layer;
+    }
+
+     //最顶部砌体高度
+    inline static uint calTopBrickHeight(const WallParameterIn_st& in)
+    {
+
+        uint uiTopBrickHeight = (in.uiWallHeight - in.uiTopJointThickness) % (in.uiBrickHeight + in.uiJointThickness)
+                                    - in.uiJointThickness;
+        uiTopBrickHeight = (uiTopBrickHeight > 0) ? uiTopBrickHeight : 0;//如果小于0，设置为0
+        return uiTopBrickHeight;
+    }
+
+    //
+    inline static uint calTotalBrickLayer(uint uiFullBrickLayer, uint uiTopBrickHeight)
+    {
+        uint uiTotalBrickLayer = uiFullBrickLayer + (uiTopBrickHeight == 0 ? 0 : 1);
+        return uiTotalBrickLayer;
+    }
+
+    inline static uint calFullNum_Layer1(const WallParameterIn_st& in)
+    {
+        uint uiFullNum_Layer1 = in.uiWallLength / (in.uiBrickLength + in.uiJointThickness);
+        return uiFullNum_Layer1;
+    }
+
+    inline static uint calBrokenLen_Layer1(const WallParameterIn_st& in, uint  uiFullNum_Layer1)
+    {
+        uint uiBrokenLenOfLayer1;
+        uiBrokenLenOfLayer1 = in.uiWallLength - (in.uiBrickLength + in.uiJointThickness) * uiFullNum_Layer1
+                                     - 2 * in.uiJointThickness;
+        uiBrokenLenOfLayer1 = (uiBrokenLenOfLayer1 > 0) ? uiBrokenLenOfLayer1 : 0;   //如果小于0，设置为0
+        return uiBrokenLenOfLayer1;
+    }
+
+    //
+    inline static uint calBrokenNum_Layer1(uint uiBrokenLenOfLayer1)
+    {
+        uint uiBrokenNum = (uiBrokenLenOfLayer1 > 0) ? 1 : 0;
+        return uiBrokenNum;
+    }
+
+    //
+    inline static void calBrokenLenLayer2(const WallParameterIn_st& in, uint uiBrokenLenOfLayer1,  uint& uiFullNum, uint& uiBrokenNum, uint& uiBrokenLen1, uint& uiBrokenLen2)
+    {
+
+        //第二排整砖、非整砖数量
+        if (uiBrokenLenOfLayer1 < in.uiBrickLength / 3.0)
+        {
+            uiFullNum= calFullNum_Layer1(in) - 1;
+            uiBrokenLen1 = in.uiBrickLength / 2.0; //第二排第一块非整砖长度
+            uiBrokenNum = 2;
+
+        }
+        else if( in.uiBrickLength / 3.0 * 2.0> uiBrokenLenOfLayer1 && uiBrokenLenOfLayer1 > in.uiBrickLength / 3.0 )
+        {
+            uiFullNum = calFullNum_Layer1(in);
+            uiBrokenLen1 = uiBrokenLenOfLayer1;    //第二排第一块非整砖长度
+            uiBrokenNum = 1;
+        }
+        else
+        {
+            uiFullNum = calFullNum_Layer1(in) - 1;
+            uiBrokenLen1 = in.uiBrickLength / 2.0; //第二排第一块非整砖长度
+            uiBrokenNum = 2;
+        }
+
+        //第二排第二块非整砖长度
+        long temp = (long)(in.uiWallLength - (in.uiBrickLength + in.uiJointThickness) * uiFullNum
+                        - (uiBrokenLen1+ in.uiJointThickness)
+                        - 2 * in.uiJointThickness);
+        if (temp < 0)
+            uiBrokenLen2 = 0;
+        else
+            uiBrokenLen2 = temp;
+    }
+
 
 /**
  * @brief 
@@ -59,55 +144,24 @@ struct WallParameterOut_st
 void WallCalculate(const WallParameterIn_st& in, WallParameterOut_st& out)
 {
     //整砖层数计算(需要保证顶部灰缝)
-    out.uiFullBrickLayer = (in.uiWallHeight - in.uiTopJointThickness) / (in.uiBrickHeight + in.uiJointThickness);
+    out.uiFullBrickLayer = calFullBrickLayer(in);
 
     //最顶部砌体高度
-    out.uiTopBrickHeight = (in.uiWallHeight - in.uiTopJointThickness) % (in.uiBrickHeight + in.uiJointThickness) 
-                                    - in.uiJointThickness;
+    out.uiTopBrickHeight = calTopBrickHeight(in);
 
-    out.uiTotalBrickLayer = out.uiFullBrickLayer + (out.uiTopBrickHeight == 0 ? 0 : 1);
-    out.uiTopBrickHeight = (out.uiTopBrickHeight > 0) ? out.uiTopBrickHeight : 0;   //如果小于0，设置为0
-        
+    out.uiTotalBrickLayer = calTotalBrickLayer(out.uiFullBrickLayer, out.uiTopBrickHeight);
+    
     //第一排整砖数量计算
-    out.uiFullNum_Layer1 = in.uiWallLength / (in.uiBrickLength + in.uiJointThickness);
-
-    //第一排非整砖数量
-    out.uiBrokenNum_Layer1 = 1;
+    out.uiFullNum_Layer1 = calFullNum_Layer1(in);
 
     //第一排非整砖长度
-    out.uiBrokenLenOfLayer1 = in.uiWallLength - (in.uiBrickLength + in.uiJointThickness) * out.uiFullNum_Layer1
-                                 - 2 * in.uiJointThickness;
-    out.uiBrokenLenOfLayer1 = (out.uiBrokenLenOfLayer1 > 0) ? out.uiBrokenLenOfLayer1 : 0;   //如果小于0，设置为0
+    out.uiBrokenLenOfLayer1 = calBrokenLen_Layer1(in, out.uiFullBrickLayer);
 
-    //第二排整砖、非整砖数量
-    if (out.uiBrokenLenOfLayer1 < in.uiBrickLength / 3.0)
-    {
-        //
-        out.uiFullNum_Layer2 = out.uiFullNum_Layer1 - 1;
-        out.uiBrokenNum_Layer2 = 2;
-        out.uiBrokenLen1OfLayer2 = in.uiBrickLength / 2.0; //第二排第一块非整砖长度
-    }
-    else if( in.uiBrickLength / 3.0 * 2.0> out.uiBrokenLenOfLayer1 && out.uiBrokenLenOfLayer1 > in.uiBrickLength / 3.0 )
-    {
-        out.uiFullNum_Layer2 = out.uiFullNum_Layer1;
-        out.uiBrokenNum_Layer2 = 1;
-        out.uiBrokenLen1OfLayer2 = out.uiBrokenLenOfLayer1;    //第二排第一块非整砖长度
-    }
-    else
-    {
-        out.uiFullNum_Layer2 = out.uiFullNum_Layer1 - 1;
-        out.uiBrokenNum_Layer2 = 2;
-        out.uiBrokenLen1OfLayer2 = in.uiBrickLength / 2.0; //第二排第一块非整砖长度
-    }
+    //第一排非整砖数量
+    out.uiBrokenNum_Layer1 = calBrokenNum_Layer1(out.uiBrokenLenOfLayer1);
 
-    //第二排第二块非整砖长度
-    long temp = (long)(in.uiWallLength - (in.uiBrickLength + in.uiJointThickness) * out.uiFullNum_Layer2 
-                    - (out.uiBrokenLen1OfLayer2 + in.uiJointThickness)
-                    - 2 * in.uiJointThickness);
-    if (temp < 0)
-        out.uiBrokenLen2OfLayer2 = 0;
-    else
-        out.uiBrokenLen2OfLayer2 = temp;
+     //第二排整砖、非整砖数量
+    calBrokenLenLayer2(in, out.uiBrokenLenOfLayer1, out.uiFullNum_Layer2, out.uiBrokenNum_Layer2, out.uiBrokenLen1OfLayer2, out.uiBrokenLen2OfLayer2);
 
 ////-----------------考虑最后一块砖小于80的情况---------------
 //    uint& len = out.uiBrokenLenOfLayer1;   //不想写这么长的名字，定义一个引用
@@ -118,17 +172,18 @@ void WallCalculate(const WallParameterIn_st& in, WallParameterOut_st& out)
 //        len = (len + in.uiBrickLength) / 2.0;
 //    }
 
-    //-------------------记录所有砖块的信息-----------------------
+
     int totalBricks_Layer1 = out.uiFullNum_Layer1 + out.uiBrokenNum_Layer1;
     int totalBricks_Layer2 = out.uiFullNum_Layer2 + out.uiBrokenNum_Layer2;
-    //如果有顶层砖，也需包含上 
-    int totalBricks = out.uiTotalBrickLayer / 2 * (totalBricks_Layer1 + totalBricks_Layer2)
-                                + out.uiTotalBrickLayer % 2 * totalBricks_Layer1;                           
+    //如果有顶层砖，也需包含上
+    out.uiTotalBrickNum = out.uiTotalBrickLayer / 2 * (totalBricks_Layer1 + totalBricks_Layer2)
+                                + out.uiTotalBrickLayer % 2 * totalBricks_Layer1;
+
 
     //创建动态内存空间-------------------------------记住以后要delete[]
-    //out.bricks = new Brick[totalBricks];
-    out.bricks = (Brick*)realloc(out.bricks, totalBricks * sizeof(Brick));
-    memset(out.bricks, 0, totalBricks * sizeof(Brick));
+    //out.bricks = new Brick[out.uiTotalBrickNum];
+    out.bricks = (Brick*)realloc(out.bricks, out.uiTotalBrickNum* sizeof(Brick));
+    memset(out.bricks, 0, out.uiTotalBrickNum * sizeof(Brick));
 
     float x(in.uiJointThickness), y(in.uiJointThickness);
     int rank(1), column(1);
@@ -136,6 +191,7 @@ void WallCalculate(const WallParameterIn_st& in, WallParameterOut_st& out)
     const int height(in.uiBrickHeight);
     int brickIndex = 0;
 
+    //-------------------记录所有砖块的信息-----------------------
     while(rank <= out.uiTotalBrickLayer)
     {
         width = (rank % 2 == 0 && column == 1 ? out.uiBrokenLen1OfLayer2 : in.uiBrickLength);

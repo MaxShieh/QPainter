@@ -3,7 +3,8 @@
 #include "wall.h"
 #include <iostream>
 #include <QtMath>
-#include <QPainter>
+#include <QPen>
+#include "QtGui/QPainter"
 #include <QPaintEvent>
 #include <QDebug>
 
@@ -11,8 +12,7 @@ WallParameterIn_st wallParamIn_st;
 WallParameterOut_st wallParamOut_st;
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)S
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     //设置输入参数
     wallParamIn_st.uiWallHeight = 3000;
@@ -52,29 +52,11 @@ void MainWindow::paintEvent(QPaintEvent *event)   //QPaintEvent *event
     // 设置画笔颜色
     painter.setPen(QColor(0, 160, 230));
 
-    // 设置字体：微软雅黑、点大小50、斜体
-    QFont font;
-    font.setFamily("Microsoft YaHei");
-    font.setPointSize(50);
-    font.setItalic(true);
-    painter.setFont(font);
-
-    // 绘制文本
-    //painter.drawText(rect(), Qt::AlignCenter, "Qt");
-
     //this->resize(this->width(),this->width() * ((float)3000 / 2500));
 
     //计算绘图比例
     float widthRatio = (float)(this->width() - 20) / wallParamIn_st.uiWallLength;
     float heightRatio = (float)(this->height() - 20) / wallParamIn_st.uiWallHeight;
-
-    //float x(10 + wallParamIn_st.uiJointThickness * widthRatio), y(this->height() - 10 - wallParamIn_st.uiJointThickness * heightRatio);
-    int rank(1);
-    int column(1);
-    int x(0);
-    int y(0);
-    int width(0);
-    int height(0);
 
     QPainterPath path;
 //-------------用黑线画出墙体的区域----------------------
@@ -87,6 +69,12 @@ void MainWindow::paintEvent(QPaintEvent *event)   //QPaintEvent *event
 
 //------------------------------------------
     path.clear();
+    int rank(1);
+    int column(1);
+    int x(0);
+    int y(0);
+    int width(0);
+    int height(0);
     int brickIndex = 0;
     bool isLayer2 = false;
     while(rank <= wallParamOut_st.uiTotalBrickLayer)
