@@ -12,7 +12,7 @@ WallParameterOut_st wallParamOut_st;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow)S
 {
     //设置输入参数
     wallParamIn_st.uiWallHeight = 3000;
