@@ -127,7 +127,7 @@ void WallCalculate(const WallParameterIn_st& in, WallParameterOut_st& out)
 
     //创建动态内存空间-------------------------------记住以后要delete[]
     //out.bricks = new Brick[totalBricks];
-    out.bricks = (Brick*)malloc(totalBricks * sizeof(Brick));
+    out.bricks = (Brick*)realloc(out.bricks, totalBricks * sizeof(Brick));
     memset(out.bricks, 0, totalBricks * sizeof(Brick));
 
     float x(in.uiJointThickness), y(in.uiJointThickness);

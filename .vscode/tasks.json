@@ -68,7 +68,7 @@
         {
             "type": "shell",
             "label": "Qt build and run release",
-            "command": "${workspaceFolder}/build/${workspaceRootFolderName}",
+            "command": "${workspaceFolder}/build/release/${workspaceRootFolderName}",
             "args": [],
             "problemMatcher": [],
             "group": "build",
