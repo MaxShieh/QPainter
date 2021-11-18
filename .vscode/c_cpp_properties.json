@@ -4,20 +4,20 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "D:\\D\\Qt\\Qt5.14.2\\Tools\\mingw730_64\\lib\\gcc\\x86_64-w64-mingw32\\7.3.0\\include\\**",
-                "D:\\D\\Qt\\Qt5.14.2\\5.14.2\\mingw73_64\\include\\QtWidgets",
-                "D:\\D\\Qt\\Qt5.14.2\\5.14.2\\mingw73_64\\include\\QtCore",
-                "D:\\D\\Qt\\Qt5.14.2\\5.14.2\\mingw73_64\\include\\**"
+                "usr/include/**",
+                "/opt/Qt5.14.2/5.14.2/gcc_64/include/QtWidgets",
+                "/opt/Qt5.14.2/5.14.2/gcc_64/include/QtCore",
+                "/opt/Qt5.14.2/5.14.2/gcc_64/include/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "D:/D/Qt/Qt5.14.2/Tools/mingw730_64/bin/gcc.exe",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "windows-gcc-x64"
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4

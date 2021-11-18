@@ -3,7 +3,7 @@
         {
             "type": "shell",
             "label": "qmake build makefile (debug)",
-            "command": "qmake",
+            "command": "/opt/Qt5.14.2/5.14.2/gcc_64/bin/qmake",
             "args": [
                 "-o",
                 "./build/Makefile",
@@ -21,7 +21,7 @@
         {
             "type": "shell",
             "label": "qmake build makefile (release)",
-            "command": "qmake",
+            "command": "/opt/Qt5.14.2/5.14.2/gcc_64/bin/qmake",
             "args": [
                 "-o",
                 "./build/Makefile",
@@ -37,7 +37,7 @@
         {
             "type": "shell",
             "label": "Qt build debug",
-            "command": "mingw32-make.exe",
+            "command": "make",
             "args": [
                 "debug"
             ],
@@ -54,7 +54,7 @@
         {
             "type": "shell",
             "label": "Qt build release",
-            "command": "mingw32-make.exe",
+            "command": "make",
             "args": [
                 "release"
             ],
@@ -71,7 +71,7 @@
         {
             "type": "shell",
             "label": "Qt build and run release",
-            "command": "${workspaceFolder}/build/release/${workspaceRootFolderName}.exe",
+            "command": "${workspaceFolder}/build/release/${workspaceRootFolderName}",
             "args": [],
             "problemMatcher": [],
             "group": "build",
@@ -87,7 +87,7 @@
         {
             "type": "shell",
             "label": "Qt build and run debug",
-            "command": "${workspaceFolder}/build/debug/${workspaceRootFolderName}.exe",
+            "command": "${workspaceFolder}/build/debug/${workspaceRootFolderName}",
             "args": [],
             "problemMatcher": [],
             "group": "build",
@@ -99,7 +99,7 @@
         {
             "type": "shell",
             "label": "Qt clean (release)",
-            "command": "mingw32-make.exe",
+            "command": "make",
             "args": [
                 "clean",
                 "distclean"

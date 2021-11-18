@@ -8,14 +8,14 @@
             "name": "(gdb) 启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/debug/${workspaceRootFolderName}.exe",
+            "program": "${workspaceFolder}/build/debug/${workspaceRootFolderName}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "D:\\D\\Qt\\Qt5.14.2\\Tools\\mingw730_64\\bin\\gdb.exe",
+            "miDebuggerPath": "usr/include/gdb",
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",
