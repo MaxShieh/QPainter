@@ -6,7 +6,7 @@
             "command": "/opt/Qt5.14.2/5.14.2/gcc_64/bin/qmake",
             "args": [
                 "-o",
-                "./build/Makefile",
+                "./build/debug/Makefile",
                 "CONFIG += debug",
                 "CONFIG += qml_debug",
                 "CONFIG += console",
@@ -24,7 +24,7 @@
             "command": "/opt/Qt5.14.2/5.14.2/gcc_64/bin/qmake",
             "args": [
                 "-o",
-                "./build/Makefile",
+                "./build/release/Makefile",
                 "CONFIG+=qtquickcompiler"
             ],
             "options": {
@@ -39,10 +39,10 @@
             "label": "Qt build debug",
             "command": "make",
             "args": [
-                "debug"
+                "--debug"
             ],
             "options": {
-                "cwd": "${workspaceFolder}/build"
+                "cwd": "${workspaceFolder}/build/debug"
             },
             "problemMatcher": [],
             "group": "build",
@@ -55,11 +55,8 @@
             "type": "shell",
             "label": "Qt build release",
             "command": "make",
-            "args": [
-                "release"
-            ],
             "options": {
-                "cwd": "${workspaceFolder}/build"
+                "cwd": "${workspaceFolder}/build/release"
             },
             "problemMatcher": [],
             "group": "build",
@@ -71,7 +68,7 @@
         {
             "type": "shell",
             "label": "Qt build and run release",
-            "command": "${workspaceFolder}/build/release/${workspaceRootFolderName}",
+            "command": "${workspaceFolder}/build/${workspaceRootFolderName}",
             "args": [],
             "problemMatcher": [],
             "group": "build",

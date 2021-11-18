@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "usr/include/**",
+                "/usr/include/**",
                 "/opt/Qt5.14.2/5.14.2/gcc_64/include/QtWidgets",
                 "/opt/Qt5.14.2/5.14.2/gcc_64/include/QtCore",
                 "/opt/Qt5.14.2/5.14.2/gcc_64/include/**"
